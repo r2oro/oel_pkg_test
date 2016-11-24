@@ -1,22 +1,25 @@
 ---
 driver:
   name: vagrant
+  http_proxy: <%= ENV['http_proxy'] %>
+  https_proxy: <%= ENV['https_proxy'] %>
+  no_proxy: <%= ENV['no_proxy'] %>
 
 provisioner:
   name: chef_zero
-
-verifier:
-  name: inspec
+  client_rb:
+    http_proxy: <%= ENV['http_proxy'] %>
+    https_proxy: <%= ENV['https_proxy'] %>
+    no_proxy: <%= ENV['no_proxy'] %>
+    ssl_verify_mode: :verify_none
+    verify_api_cert: false
 
 platforms:
-  - name: ubuntu-16.04
-  - name: centos-7.2
+  - name: oel-6.6
+    driver_config:
+      box: oel66
 
 suites:
   - name: default
     run_list:
       - recipe[oel_pkg_test::default]
-    verifier:
-      inspec_tests:
-        - test/recipes
-    attributes:
